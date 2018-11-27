@@ -5,7 +5,7 @@ export default class SideMenu extends React.Component {
   render() {
     return (
       <nav className="nav-sidebar">
-        <h3 class="text-center">LearnZone React</h3>
+        <h3 className="text-center">LearnZone React</h3>
         <div className="list-group">
           <NavLink
             to="/catalogs"

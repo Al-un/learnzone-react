@@ -1,11 +1,21 @@
-import React from "react";
+import Catalog from "../components/Catalog";
+import entityHandlerHoc from "./utils/entityHandlerHoc";
 
-export default class CatalogContainer extends React.Component {
-  render() {
-    return (
-      <div>
-        <h3>Catalogs Container to be implemented</h3>
-      </div>
-    );
-  }
-}
+const newEntity = () => ({
+  name: "",
+  code: ""
+});
+
+const loadEntity = () => ({
+  id: 1,
+  name: "Name",
+  code: "Code",
+  description: "Description",
+  createdAt: "xxx",
+  updatedAt: "xxx",
+  user_id: 1
+});
+
+const CatalogContainer = entityHandlerHoc(Catalog, newEntity, loadEntity);
+
+export default CatalogContainer;

@@ -1,5 +1,5 @@
-@import 'base/mixins';
-@import 'base/variables';
+@import "base/mixins";
+@import "base/variables";
 // ---------- navigation components --------------------------------------------
 // Layout related styling
 #nav-toolbar {
@@ -60,8 +60,10 @@
     margin-left: -250px;
     z-index: 200;
     background: white;
-
-    h1, h2, h3, h4{
+    h1,
+    h2,
+    h3,
+    h4 {
         height: $toolbar-height;
         line-height: $toolbar-height;
         margin: 0;

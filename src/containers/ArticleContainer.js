@@ -1,11 +1,19 @@
-import React from "react";
+import Article from "../components/Article";
+import entityHandlerHoc from "./utils/entityHandlerHoc";
 
-export default class ArticleContainer extends React.Component {
-  render() {
-    return (
-      <div>
-        <h3>Article Container to be implemented</h3>
-      </div>
-    );
-  }
-}
+const newEntity = () => ({
+  name: ""
+});
+
+const loadEntity = () => ({
+  id: 1,
+  name: "Name",
+  description: "Description",
+  createdAt: "xxx",
+  updatedAt: "xxx",
+  user_id: 1
+});
+
+const ArticleContainer = entityHandlerHoc(Article, newEntity, loadEntity);
+
+export default ArticleContainer;
