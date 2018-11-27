@@ -1,10 +1,15 @@
-import React, { Component } from 'react';
-import './stylesheets/application.scss';
-import Layout from './layout/Layout';
+import React, { Component } from "react";
+import "./stylesheets/application.scss";
+import Layout from "./layout/Layout";
+import { BrowserRouter } from "react-router-dom";
 
 class App extends Component {
   render() {
-    return <Layout />;
+    return (
+      <BrowserRouter>
+        <Layout />
+      </BrowserRouter>
+    );
   }
 }
 

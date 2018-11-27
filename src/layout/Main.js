@@ -1,7 +1,12 @@
-import React from 'react';
+import React from "react";
+import Routes from "../routes";
 
 export default class Main extends React.Component {
   render() {
-    return <main className="nav-content">Main here</main>;
+    return (
+      <main className="nav-content">
+        <Routes />
+      </main>
+    );
   }
 }

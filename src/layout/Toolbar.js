@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 export default class Toolbar extends React.Component {
   toggleSideMenu(event) {
-      document.getElementById('nav-wrapper').classList.toggle('nav-toggle-menu');
+    document.getElementById("nav-wrapper").classList.toggle("nav-toggle-menu");
   }
 
   render() {

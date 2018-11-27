@@ -1,11 +1,11 @@
-import React from 'react';
-import SideMenu from './SideMenu';
-import Toolbar from './Toolbar';
-import Main from './Main';
+import React from "react";
+import SideMenu from "./SideMenu";
+import Toolbar from "./Toolbar";
+import Main from "./Main";
 
 export default class Layout extends React.Component {
   handleBackdropClick() {
-    document.getElementById('nav-wrapper').classList.toggle('nav-toggle-menu');
+    document.getElementById("nav-wrapper").classList.toggle("nav-toggle-menu");
   }
 
   render() {

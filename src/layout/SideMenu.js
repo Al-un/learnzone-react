@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import { NavLink } from "react-router-dom";
 
 export default class SideMenu extends React.Component {
   render() {
@@ -6,15 +7,24 @@ export default class SideMenu extends React.Component {
       <nav className="nav-sidebar">
         <h3 class="text-center">LearnZone React</h3>
         <div className="list-group">
-          <a className="list-group-item" href="/">
+          <NavLink
+            to="/catalogs"
+            activeClassName="active"
+            className="list-group-item">
             Catalogs
-          </a>
-          <a className="list-group-item" href="/">
+          </NavLink>
+          <NavLink
+            to="/articles"
+            activeClassName="active"
+            className="list-group-item">
             Articles
-          </a>
-          <a className="list-group-item" href="/">
-            Misc info
-          </a>
+          </NavLink>
+          <NavLink
+            to="/misc-info"
+            activeClassName="active"
+            className="list-group-item">
+            Misc-info
+          </NavLink>
         </div>
       </nav>
     );
