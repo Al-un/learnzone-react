@@ -47,36 +47,8 @@ button {
         color: $font-black;
         cursor: pointer;
     }
-    /* special buttons */
-    &.delete-button {
-        background-color: lightcoral;
-        border-color: red;
-        &:hover {
-            background-color: darkred;
-            color: $font-white;
-        }
-    }
     /* FontAwesome icon */
     i {
         margin: auto 8px;
-    }
-}
-
-.button-row {
-    @include flexbox;
-    @include flex-wrap;
-    @include justify-content(space-between);
-    padding: 16px;
-    input[type="submit"],
-    button {
-        @include box-sizing;
-        max-width: 300px;
-        width: 100%;
-        margin: 8px auto;
-    }
-    /* stretching form */
-    form {
-        max-width: 300px;
-        width: 100%;
     }
 }

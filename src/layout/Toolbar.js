@@ -9,7 +9,7 @@ export default class Toolbar extends React.Component {
     return (
       <header className="nav-toolbar navbar">
         <button type="button" onClick={this.toggleSideMenu}>
-          <span className="navbar-toggler-icon fas fa-home" />
+          <span className="fas fa-bars" />
         </button>
         Toolbar here
       </header>

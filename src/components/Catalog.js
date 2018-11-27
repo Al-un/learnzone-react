@@ -1,5 +1,6 @@
 import React from "react";
 import toggleEditDisplayHoc from "./utils/ToggleEditDisplayHoc";
+import { api_post, api_patch } from "../api";
 
 function CatalogForm(props) {
   return (
@@ -35,7 +36,7 @@ function CatalogForm(props) {
             onChange={props.handleValueChange}
           />
         </div>
-        <button type="submit" className="btn btn-success btn-lg">
+        <button type="submit" className="btn btn-primary">
           Save
         </button>
       </form>
@@ -66,14 +67,9 @@ function CatalogDetail(props) {
   );
 }
 
-const entitySaveFunction = entity => {
-  console.log(`Saving catalog ${JSON.stringify(entity)}`);
-};
-
-const Catalog = toggleEditDisplayHoc(
-  CatalogForm,
-  CatalogDetail,
-  entitySaveFunction
-);
+const Catalog = toggleEditDisplayHoc(CatalogForm, CatalogDetail, {
+  create: catalog => api_post(`/catalogs/`, catalog),
+  update: catalog => api_patch(`/catalogs/${catalog.id}`, catalog)
+});
 
 export default Catalog;

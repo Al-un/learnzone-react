@@ -1,11 +1,14 @@
 import React from "react";
 import toggleEditDisplayHoc from "./utils/ToggleEditDisplayHoc";
+import { api_post, api_patch } from "../api";
 
 function ArticleForm(props) {
   return (
     <div className="container">
       <form onSubmit={props.handleFormSubmit}>
-        <input type="hidden" name="id" value={props.entity.id} />
+        {props.entity.id && (
+          <input type="hidden" name="id" value={props.entity.id} />
+        )}
         <div className="form-group">
           <input
             className="w-100"
@@ -57,14 +60,9 @@ function ArticleDetail(props) {
   );
 }
 
-const entitySaveFunction = entity => {
-  console.log(`Saving article ${JSON.stringify(entity)}`);
-};
-
-const Article = toggleEditDisplayHoc(
-  ArticleForm,
-  ArticleDetail,
-  entitySaveFunction
-);
+const Article = toggleEditDisplayHoc(ArticleForm, ArticleDetail, {
+  create: article => api_post(`/articles/`, article),
+  update: article => api_patch(`/articles/${article.id}`, article)
+});
 
 export default Article;

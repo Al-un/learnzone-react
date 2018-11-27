@@ -1,19 +1,12 @@
 import Article from "../components/Article";
 import entityHandlerHoc from "./utils/entityHandlerHoc";
+import { api_get } from "../api";
 
-const newEntity = () => ({
-  name: ""
+const ArticleContainer = entityHandlerHoc(Article, {
+  new: () => ({
+    name: ""
+  }),
+  load: id => api_get(`/articles/${id}`)
 });
-
-const loadEntity = () => ({
-  id: 1,
-  name: "Name",
-  description: "Description",
-  createdAt: "xxx",
-  updatedAt: "xxx",
-  user_id: 1
-});
-
-const ArticleContainer = entityHandlerHoc(Article, newEntity, loadEntity);
 
 export default ArticleContainer;

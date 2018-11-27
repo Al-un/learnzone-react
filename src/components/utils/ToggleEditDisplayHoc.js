@@ -1,12 +1,13 @@
 import React from "react";
+import CRUD from "../../api/crud";
 
 /**
  * This HoC switches between a display only mode and an edition form.
  * @param {Component} FormComponent edition mode
  * @param {Component} DetailComponent display mode
- * @param {Function} submitEntityFn function to call whenever the form is submitted
+ * @param {Object} entityFunctions Must define "create" and "update" functions
  */
-function toggleEditDisplayHoc(FormComponent, DetailComponent, submitEntityFn) {
+function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
   return class extends React.Component {
     constructor(props) {
       super(props);
@@ -24,7 +25,7 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, submitEntityFn) {
      * @return true if crud triggers edition
      */
     isEditing(crud) {
-      return "new" === crud || "edit" === crud;
+      return CRUD.NEW === crud || CRUD.EDIT === crud;
     }
 
     /**
@@ -46,10 +47,32 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, submitEntityFn) {
      * creation or update distinction
      */
     handleFormSubmit = event => {
+      // Not using standard form feature
       event.preventDefault();
-      this.disableEditionMode();
-      console.log(`submitting entity ${JSON.stringify(this.state)}`);
-      submitEntityFn(this.state.entity);
+      // console.log(`submitting entity ${JSON.stringify(this.state)}`);
+
+      // Distinguish create or update
+      // Cannot rely on props.crud as a new entitiy might be edited again
+      if (this.state.entity.id) {
+        entityFunctions
+          .update(this.state.entity)
+          .catch(err => console.err("Error: " + err));
+        this.disableEditionMode();
+      }
+      // no id: creating new entity
+      else {
+        entityFunctions
+          .create(this.state.entity)
+          .then(response => response.json())
+          .then(data => {
+            console.log(`receive data ${JSON.stringify(data)}`);
+            if (data) {
+              this.setState({ entity: data });
+            }
+            this.disableEditionMode();
+          })
+          .catch(err => console.err("Error: " + err));
+      }
     };
 
     /**
