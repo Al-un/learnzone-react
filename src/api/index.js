@@ -1,4 +1,7 @@
-const API = "http://localhost:8000";
+const API =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:8000"
+    : "https://learnzone-rails.herokuapp.com";
 const HEADERS = {
   Accept: "application/json",
   "Content-Type": "application/json",
@@ -53,7 +56,7 @@ export function api_patch(url, body) {
     headers: HEADERS,
     method: "PATCH",
     body: JSON.stringify(body)
-  }).then(logResponse(url, 'PATCH'));
+  }).then(logResponse(url, "PATCH"));
 }
 
 export function api_put(url, body) {
