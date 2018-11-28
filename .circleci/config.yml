@@ -1,0 +1,29 @@
+# [28-Nov-2018] switch to Yarn
+#               https://circleci.com/docs/2.0/yarn/
+
+# Using CircleCI 2
+version: 2
+
+jobs: 
+  build:
+    docker: 
+      # https://hub.docker.com/r/circleci/node/
+      - image: circleci/node:11-browsers-legacy
+    steps: 
+      - checkout
+
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+          - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Install Dependencies
+          # https://yarnpkg.com/lang/en/docs/cli/install/
+          command: yarn install --frozen-lockfile
+
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: learnzone-react-dependencies-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
