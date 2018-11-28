@@ -16,7 +16,7 @@ jobs:
           command: 'sudo npm install -g npm@latest'
 
       - restore_cache:
-          key:
+          keys:
           - learnzone-react-dependencies-{{ checksum "package.json" }}
           # [TODO] Fallback?
           - learnzone-react-dependencies-
