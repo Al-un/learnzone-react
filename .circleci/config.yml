@@ -7,18 +7,25 @@ jobs:
   build:
     docker: 
       # https://hub.docker.com/r/circleci/node/
-      - image: circleci/node
+      - image: circleci/node:11-browsers-legacy
     steps: 
       - checkout
+
       - run:
-        name: update-npm
-        command: 'sudo npm install -g npm@latest'
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+
       - restore_cache:
-        key: learnzone-react-dependencies-{{ checksum "package.json" }}
+          key:
+          - learnzone-react-dependencies-{{ checksum "package.json" }}
+          # [TODO] Fallback?
+          - learnzone-react-dependencies-
+
       - run:
-        name: install-npm-wee
-        command: npm install
+          name: install dependencies
+          command: npm install
+
       - save_cache:
-        key: learnzone-react-dependencies-{{ checksum "package.json" }}
-        paths:
-          - ./node_modules
+          key: learnzone-react-dependencies-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
