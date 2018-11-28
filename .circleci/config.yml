@@ -1,4 +1,5 @@
-
+# [28-Nov-2018] switch to Yarn
+#               https://circleci.com/docs/2.0/yarn/
 
 # Using CircleCI 2
 version: 2
@@ -11,21 +12,18 @@ jobs:
     steps: 
       - checkout
 
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-
       - restore_cache:
+          name: Restore Yarn Package Cache
           keys:
-          - learnzone-react-dependencies-{{ checksum "package.json" }}
-          # [TODO] Fallback?
-          - learnzone-react-dependencies-
+          - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
 
       - run:
-          name: install dependencies
-          command: npm install
+          name: Install Dependencies
+          # https://yarnpkg.com/lang/en/docs/cli/install/
+          command: yarn install --frozen-lockfile
 
       - save_cache:
-          key: learnzone-react-dependencies-{{ checksum "package.json" }}
+          name: Save Yarn Package Cache
+          key: learnzone-react-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
