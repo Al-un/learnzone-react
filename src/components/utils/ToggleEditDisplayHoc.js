@@ -11,11 +11,16 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
   return class extends React.Component {
     constructor(props) {
       super(props);
-      console.log(`props: ${JSON.stringify(props)}`);
+      console.log(
+        `[toggleEditDisplayHoc.construct] for ${
+          DetailComponent.name
+        } with props: ${JSON.stringify(props)}`
+      );
       this.state = {
         editing: this.isEditing(props.crud),
         entity: props.entity
       };
+      this.name = FormComponent.name + DetailComponent.name;
       // console.log(`loading entity ${JSON.stringify(this.state)}`);
     }
 

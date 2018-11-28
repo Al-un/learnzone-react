@@ -52,7 +52,7 @@ function entitiesHandlerHoc(WrappedComponent, entityFunctions) {
           />
         </div>
       ) : (
-        <div>Loading...</div>
+        <div>Loading list...</div>
       );
     }
   };

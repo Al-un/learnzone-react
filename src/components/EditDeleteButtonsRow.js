@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import auth from "../services/auth";
 
 export default class EditDeleteButtonsRow extends React.Component {
   /**
@@ -14,7 +15,7 @@ export default class EditDeleteButtonsRow extends React.Component {
   };
 
   render() {
-    return (
+    return auth.isAuthenticated() ? (
       <div className="d-flex justify-content-between">
         <Link to={this.props.editPath} className="btn btn-sm btn-info">
           <span className="fas fa-edit" />
@@ -25,6 +26,8 @@ export default class EditDeleteButtonsRow extends React.Component {
           Delete
         </button>
       </div>
+    ) : (
+      <div className="unauthorized" />
     );
   }
 }

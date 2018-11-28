@@ -6,6 +6,13 @@ import ArticlesContainer from "../containers/ArticlesContainer";
 import ArticleContainer from "../containers/ArticleContainer";
 import MiscInfoPage from "../pages/MiscInfoPage";
 import CRUD from "../api/crud";
+import { Callback } from "../services/auth";
+import secured from "../services/auth/Secured";
+
+/**
+ * Exporting root path
+ */
+export const ROOT_PATH = "/";
 
 /**
  * https://reacttraining.com/react-router/core/api/
@@ -16,11 +23,17 @@ export default class Routes extends React.Component {
       <Switch>
         <Route exact path="/" component={CatalogsContainer} />
 
+        <Route
+          exact
+          path="/callback"
+          render={props => <Callback {...props} auth={this.props.auth} />}
+        />
+
         <Route exact path="/catalogs" component={CatalogsContainer} />
         <Route
           exact
           path="/catalogs/new"
-          render={props => <CatalogContainer {...props} crud={CRUD.NEW} />}
+          render={props => secured(props, CatalogContainer, { crud: CRUD.NEW })}
         />
         <Route
           exact
@@ -30,14 +43,16 @@ export default class Routes extends React.Component {
         <Route
           exact
           path="/catalogs/:id/edit"
-          render={props => <CatalogContainer {...props} crud={CRUD.EDIT} />}
+          render={props =>
+            secured(props, CatalogContainer, { crud: CRUD.EDIT })
+          }
         />
 
         <Route exact path="/articles" component={ArticlesContainer} />
         <Route
           exact
           path="/articles/new"
-          render={props => <ArticleContainer {...props} crud={CRUD.NEW} />}
+          render={props => secured(props, ArticleContainer, { crud: CRUD.NEW })}
         />
         <Route
           exact
@@ -47,7 +62,9 @@ export default class Routes extends React.Component {
         <Route
           exact
           path="/articles/:id/edit"
-          render={props => <ArticleContainer {...props} crud={CRUD.EDIT} />}
+          render={props =>
+            secured(props, ArticleContainer, { crud: CRUD.EDIT })
+          }
         />
 
         <Route exact path="/misc-info" component={MiscInfoPage} />

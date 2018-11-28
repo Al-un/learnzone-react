@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import "./stylesheets/application.scss";
 import Layout from "./layout/Layout";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
+import auth from "./services/auth";
+import history from "./routes/history";
 
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        <Layout />
-      </BrowserRouter>
+      <Router history={history}>
+        <Layout auth={auth} />
+      </Router>
     );
   }
 }

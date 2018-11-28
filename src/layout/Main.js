@@ -5,7 +5,7 @@ export default class Main extends React.Component {
   render() {
     return (
       <main className="nav-content">
-        <Routes />
+        <Routes auth={this.props.auth} />
       </main>
     );
   }

@@ -13,8 +13,8 @@ export default class Layout extends React.Component {
       <div id="nav-wrapper" className="nav-wrapper">
         <SideMenu />
         <div className="nav-container">
-          <Toolbar />
-          <Main />
+          <Toolbar auth={this.props.auth} />
+          <Main auth={this.props.auth} />
         </div>
         <div className="nav-backdrop" onClick={this.handleBackdropClick} />
       </div>

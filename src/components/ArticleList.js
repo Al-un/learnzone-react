@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import EditDeleteButtonsRow from "./EditDeleteButtonsRow";
+import auth from "../services/auth";
 
 export default class ArticleList extends React.Component {
   render() {
@@ -29,12 +30,14 @@ export default class ArticleList extends React.Component {
             </div>
           ))}
         </div>
-        <div className="row">
-          <Link to="/articles/new" className="btn btn-outline-primary">
-            <span className="fas fa-plus" />
-            <span>Create an article</span>
-          </Link>
-        </div>
+        {auth.isAuthenticated && (
+          <div className="row">
+            <Link to="/articles/new" className="btn btn-outline-primary">
+              <span className="fas fa-plus" />
+              <span>Create an article</span>
+            </Link>
+          </div>
+        )}
       </div>
     );
   }
