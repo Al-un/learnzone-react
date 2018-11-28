@@ -6,6 +6,7 @@ version: 2
 jobs: 
   build:
     docker: 
+      # https://hub.docker.com/r/circleci/node/
       - image: circleci/node
     steps: 
       - checkout
@@ -13,11 +14,11 @@ jobs:
         name: update-npm
         command: 'sudo npm install -g npm@latest'
       - restore_cache:
-        key: dependencies-{{ checksum "package.json" }}
+        key: learnzone-react-dependencies-{{ checksum "package.json" }}
       - run:
-        name: install-npm
+        name: install-npm-wee
         command: npm install
-      - save_chace:
-        key: dependencies-{{ checksum "package.json" }}
+      - save_cache:
+        key: learnzone-react-dependencies-{{ checksum "package.json" }}
         paths:
           - ./node_modules
