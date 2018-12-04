@@ -24,10 +24,13 @@ function entityHandlerHoc(WrappedComponent, entityFunctions) {
     componentDidMount() {
       let id = this.props.match.params.id;
       if (id) {
+        console.log(`${WrappedComponent.name} loading #${id}`);
         entityFunctions
           .load(this.props.match.params.id)
           .then(response => response.json())
           .then(data => this.setState({ entity: data }));
+      } else {
+        console.log("No loading entity");
       }
     }
 

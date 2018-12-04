@@ -16,7 +16,8 @@ export default class Auth {
     clientID: AUTH0_CONFIG.clientID,
     redirectUri: AUTH0_CONFIG.redirectUri,
     responseType: "token id_token",
-    scope: "openid"
+    scope: "openid",
+    audience: AUTH0_CONFIG.audience
   });
 
   constructor() {
@@ -31,7 +32,12 @@ export default class Auth {
    * Trigger redirection to login page
    */
   login() {
-    console.log(`[Authentication] going to Auth0 login page`);
+    let redirect_url = localStorage.getItem(SAVED_URL);
+    if (redirect_url === undefined || redirect_url === null) {
+      redirect_url = window.location.pathname;
+      localStorage.setItem(SAVED_URL, redirect_url);
+    }
+    console.log(`[Authentication] Auth0 login with saving: ${redirect_url}`);
     this.auth0.authorize();
   }
 
@@ -42,7 +48,7 @@ export default class Auth {
     this.auth0.parseHash((err, authResult) => {
       // Any error
       if (err) {
-        console.error(`[Authentication] Handling error:`);
+        console.error(`[Authentication] ${err.error}: ${err.errorDescription}`);
         console.error(err);
         history.replace(ROOT_PATH);
       }
@@ -54,6 +60,7 @@ export default class Auth {
         // redirection
         let redirectUrl = localStorage.getItem(SAVED_URL) || ROOT_PATH;
         console.log(`[Authentication] success and redirect to ${redirectUrl}`);
+        localStorage.removeItem(SAVED_URL);
         history.replace(redirectUrl);
       }
 

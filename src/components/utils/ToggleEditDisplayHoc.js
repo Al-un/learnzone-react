@@ -1,5 +1,7 @@
 import React from "react";
 import CRUD from "../../api/crud";
+import auth from "../../services/auth";
+import history from "../../routes/history";
 
 /**
  * This HoC switches between a display only mode and an edition form.
@@ -18,7 +20,8 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
       );
       this.state = {
         editing: this.isEditing(props.crud),
-        entity: props.entity
+        entity: props.entity,
+        redirect: undefined
       };
       this.name = FormComponent.name + DetailComponent.name;
       // console.log(`loading entity ${JSON.stringify(this.state)}`);
@@ -72,7 +75,7 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
           .then(data => {
             console.log(`receive data ${JSON.stringify(data)}`);
             if (data) {
-              this.setState({ entity: data });
+              history.replace(entityFunctions.redirect(data.id));
             }
             this.disableEditionMode();
           })
@@ -108,6 +111,7 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
         <DetailComponent
           entity={this.state.entity}
           enableEditionMode={this.enableEditionMode}
+          auth={auth}
         />
       );
     }
