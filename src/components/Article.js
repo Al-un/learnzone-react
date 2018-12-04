@@ -25,7 +25,7 @@ function ArticleForm(props) {
             className="w-100"
             name="description"
             placeholder="Description"
-            value={props.entity.description}
+            value={props.entity.description || undefined}
             onChange={props.handleValueChange}
           />
         </div>
@@ -49,12 +49,14 @@ function ArticleDetail(props) {
         <span className="card-text">{props.entity.description}</span>
       </div>
       <div className="card-footer">
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={props.enableEditionMode}>
-          Edit
-        </button>
+        {props.auth.isAuthenticated() && (
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={props.enableEditionMode}>
+            Edit
+          </button>
+        )}
       </div>
     </div>
   );

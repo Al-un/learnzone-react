@@ -1,5 +1,6 @@
 import React from "react";
 import CRUD from "../../api/crud";
+import auth from "../../services/auth";
 
 /**
  * This HoC switches between a display only mode and an edition form.
@@ -108,6 +109,7 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
         <DetailComponent
           entity={this.state.entity}
           enableEditionMode={this.enableEditionMode}
+          auth={auth}
         />
       );
     }

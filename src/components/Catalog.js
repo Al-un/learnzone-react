@@ -6,7 +6,9 @@ function CatalogForm(props) {
   return (
     <div className="container">
       <form onSubmit={props.handleFormSubmit}>
-        <input type="hidden" name="id" value={props.entity.id} />
+        {props.entity.id && (
+          <input type="hidden" name="id" value={props.entity.id} />
+        )}
         <div className="form-group">
           <input
             className="col col-md-2"
@@ -32,7 +34,7 @@ function CatalogForm(props) {
             className="w-100"
             name="description"
             placeholder="Description"
-            value={props.entity.description}
+            value={props.entity.description || undefined}
             onChange={props.handleValueChange}
           />
         </div>
@@ -56,12 +58,14 @@ function CatalogDetail(props) {
         <span className="card-text">{props.entity.description}</span>
       </div>
       <div className="card-footer">
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={props.enableEditionMode}>
-          Edit
-        </button>
+        {props.auth.isAuthenticated() && (
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={props.enableEditionMode}>
+            Edit
+          </button>
+        )}
       </div>
     </div>
   );
