@@ -73,7 +73,8 @@ function CatalogDetail(props) {
 
 const Catalog = toggleEditDisplayHoc(CatalogForm, CatalogDetail, {
   create: catalog => api_post(`/catalogs/`, catalog),
-  update: catalog => api_patch(`/catalogs/${catalog.id}`, catalog)
+  update: catalog => api_patch(`/catalogs/${catalog.id}`, catalog),
+  redirect: id => `/catalogs/${id}`
 });
 
 export default Catalog;

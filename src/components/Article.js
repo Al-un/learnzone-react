@@ -64,7 +64,8 @@ function ArticleDetail(props) {
 
 const Article = toggleEditDisplayHoc(ArticleForm, ArticleDetail, {
   create: article => api_post(`/articles/`, article),
-  update: article => api_patch(`/articles/${article.id}`, article)
+  update: article => api_patch(`/articles/${article.id}`, article),
+  redirect: id => `/articles/${id}`
 });
 
 export default Article;
