@@ -4,7 +4,7 @@ import CatalogsContainer from "../containers/CatalogsContainer";
 import CatalogContainer from "../containers/CatalogContainer";
 import ArticlesContainer from "../containers/ArticlesContainer";
 import ArticleContainer from "../containers/ArticleContainer";
-import MiscInfoPage from "../pages/MiscInfoPage";
+import MiscInfoPage from "../pages/static/MiscInfoPage";
 import CRUD from "../api/crud";
 import { Callback } from "../services/auth";
 import secured from "../services/auth/Secured";
