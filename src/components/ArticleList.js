@@ -21,6 +21,7 @@ export default class ArticleList extends React.Component {
                   </div>
                 </Link>
                 <div className="card-footer">
+                  <span>Owner: {article.user_id}</span>
                   <EditDeleteButtonsRow
                     editPath={`/articles/${article.id}/edit`}
                     deleteEntity={() => this.props.deleteEntity(article.id)}

@@ -22,6 +22,7 @@ export default class CatalogList extends React.Component {
                   </div>
                 </Link>
                 <div className="card-footer">
+                  <span>Owner: {catalog.user_id}</span>
                   <EditDeleteButtonsRow
                     editPath={`/catalogs/${catalog.id}/edit`}
                     deleteEntity={() => this.props.deleteEntity(catalog.id)}
