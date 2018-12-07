@@ -1,8 +1,9 @@
 import React from "react";
-import toggleEditDisplayHoc from "./utils/ToggleEditDisplayHoc";
-import { api_post, api_patch } from "../api";
+import { Link } from "react-router-dom";
+import EditDeleteButtonsRow from "./EditDeleteButtonsRow";
+import auth from "../services/auth";
 
-function ArticleForm(props) {
+export function ArticleForm(props) {
   return (
     <div className="container">
       <form onSubmit={props.handleFormSubmit}>
@@ -37,7 +38,7 @@ function ArticleForm(props) {
   );
 }
 
-function ArticleDetail(props) {
+export function ArticleDetail(props) {
   return (
     <div className="card w-100">
       <div className="card-header">
@@ -62,10 +63,49 @@ function ArticleDetail(props) {
   );
 }
 
-const Article = toggleEditDisplayHoc(ArticleForm, ArticleDetail, {
-  create: article => api_post(`/articles/`, article),
-  update: article => api_patch(`/articles/${article.id}`, article),
-  redirect: id => `/articles/${id}`
-});
+export function ArticleList(props) {
+  return (
+    <div className="container-fluid articles-list">
+      <h3>Articles</h3>
+      <div className="row">
+        {props.entities.map((article, index) => (
+          <div key={article.id} className="col-12 col-md-3 mt-3">
+            <div className="card">
+              <Link to={`/articles/${article.id}`}>
+                <div className="card-header">
+                  <span>{article.name}</span>
+                </div>
+                <div className="card-body">
+                  <p>{article.description}</p>
+                </div>
+              </Link>
+              <div className="card-footer">
+                <span>Owner: {article.user_id}</span>
+                <EditDeleteButtonsRow
+                  editPath={`/articles/${article.id}/edit`}
+                  deleteEntity={() => props.deleteEntity(article.id)}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {auth.isAuthenticated && (
+        <div className="row">
+          <Link to="/articles/new" className="btn btn-outline-primary">
+            <span className="fas fa-plus" />
+            <span>Create an article</span>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
 
-export default Article;
+// const Article = toggleEditDisplayHoc(ArticleForm, ArticleDetail, {
+//   create: article => api_post(`/articles/`, article),
+//   update: article => api_patch(`/articles/${article.id}`, article),
+//   redirect: id => `/articles/${id}`
+// });
+
+// export default Article;

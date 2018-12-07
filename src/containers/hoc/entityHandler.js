@@ -4,27 +4,41 @@ import auth from "../../services/auth";
 import history from "../../routes/history";
 
 /**
- * This HoC switches between a display only mode and an edition form.
+ *
  * @param {Component} FormComponent edition mode
  * @param {Component} DetailComponent display mode
- * @param {Object} entityFunctions Must define "create" and "update" functions
+ * @param {Object} crudFunctions Must define functions: `new(), `create(entity)`,
+ * `update(entity)`, `redirect(id)`, `load(id)`
  */
-function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
+function entityHandler(FormComponent, DetailComponent, crudFunctions) {
   return class extends React.Component {
     constructor(props) {
       super(props);
-      console.log(
-        `[toggleEditDisplayHoc.construct] for ${
-          DetailComponent.name
-        } with props: ${JSON.stringify(props)}`
-      );
+
       this.state = {
         editing: this.isEditing(props.crud),
-        entity: props.entity,
-        redirect: undefined
+        redirect: undefined,
+        entity: this.props.crud === CRUD.NEW ? crudFunctions.new() : undefined
       };
       this.name = FormComponent.name + DetailComponent.name;
-      // console.log(`loading entity ${JSON.stringify(this.state)}`);
+
+      console.log(
+        `[entityHandler.new] for ${this.name} props: ${JSON.stringify(props)}`
+      );
+    }
+
+    componentDidMount() {
+      let id = this.props.match.params.id;
+      // hard coded "new" id
+      if (id && id !== CRUD.NEW) {
+        console.log(`${this.name} loading #${id}`);
+        crudFunctions
+          .load(this.props.match.params.id)
+          .then(response => response.json())
+          .then(data => this.setState({ entity: data }));
+      } else {
+        console.log("No loading entity");
+      }
     }
 
     /**
@@ -62,20 +76,20 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
       // Distinguish create or update
       // Cannot rely on props.crud as a new entitiy might be edited again
       if (this.state.entity.id) {
-        entityFunctions
+        crudFunctions
           .update(this.state.entity)
           .catch(err => console.err("Error: " + err));
         this.disableEditionMode();
       }
       // no id: creating new entity
       else {
-        entityFunctions
+        crudFunctions
           .create(this.state.entity)
           .then(response => response.json())
           .then(data => {
             console.log(`receive data ${JSON.stringify(data)}`);
             if (data) {
-              history.replace(entityFunctions.redirect(data.id));
+              history.replace(crudFunctions.redirect(data.id));
             }
             this.disableEditionMode();
           })
@@ -97,25 +111,31 @@ function toggleEditDisplayHoc(FormComponent, DetailComponent, entityFunctions) {
       // console.log(`updating entity ${JSON.stringify(this.state)}`);
     };
 
-    /**
-     * Conditionally render the form or the display only
-     */
     render() {
-      return this.state.editing ? (
-        <FormComponent
-          entity={this.state.entity}
-          handleFormSubmit={this.handleFormSubmit}
-          handleValueChange={this.handleValueChange}
-        />
-      ) : (
-        <DetailComponent
-          entity={this.state.entity}
-          enableEditionMode={this.enableEditionMode}
-          auth={auth}
-        />
-      );
+      // render detail or form only if entity is loaded
+      if (this.state.entity) {
+        return this.state.editing ? (
+          // rendering new or edit form
+          <FormComponent
+            entity={this.state.entity}
+            handleFormSubmit={this.handleFormSubmit}
+            handleValueChange={this.handleValueChange}
+          />
+        ) : (
+          // rendering entity details
+          <DetailComponent
+            entity={this.state.entity}
+            enableEditionMode={this.enableEditionMode}
+            auth={auth}
+          />
+        );
+      }
+      // Hold on!
+      else {
+        return <div>Loading entity...</div>;
+      }
     }
   };
 }
 
-export default toggleEditDisplayHoc;
+export default entityHandler;

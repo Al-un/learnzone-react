@@ -5,7 +5,7 @@ import React from "react";
  * @param {*} WrappedComponent
  * @param {Object} entityFunctions Must define "load" and "delete(id)" functions
  */
-function entitiesHandlerHoc(WrappedComponent, entityFunctions) {
+function entitiesHandler(WrappedComponent, entityFunctions) {
   return class extends React.Component {
     constructor(props) {
       super(props);
@@ -58,4 +58,4 @@ function entitiesHandlerHoc(WrappedComponent, entityFunctions) {
   };
 }
 
-export default entitiesHandlerHoc;
+export default entitiesHandler;
