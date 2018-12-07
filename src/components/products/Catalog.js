@@ -3,6 +3,18 @@ import { Link } from "react-router-dom";
 import EditDeleteButtonsRow from "../utils/EditDeleteButtonsRow";
 import auth from "../../services/auth";
 import IdHiddenInput from "../utils/IdHiddenInput";
+import PropTypes from "prop-types";
+
+/**
+ * Catalog definition
+ */
+const CATALOG_ATTRIBUTES = {
+  id: PropTypes.number,
+  code: PropTypes.string,
+  name: PropTypes.string,
+  description: PropTypes.string,
+  user_id: PropTypes.number
+};
 
 /**
  * Catalog form
@@ -53,6 +65,12 @@ export function CatalogForm(props) {
   );
 }
 
+CatalogForm.propTypes = {
+  entity: PropTypes.shape(CATALOG_ATTRIBUTES).isRequired,
+  handleValueChange: PropTypes.func.isRequired,
+  handleFormSubmit: PropTypes.func.isRequired
+};
+
 /**
  * Catalog details
  * @param {*} props
@@ -83,6 +101,11 @@ export function CatalogDetail(props) {
     </div>
   );
 }
+
+CatalogDetail.propTypes = {
+  entity: PropTypes.shape(CATALOG_ATTRIBUTES).isRequired,
+  enableEditionMode: PropTypes.func.isRequired
+};
 
 /**
  * Catalogs list
@@ -131,3 +154,8 @@ export function CatalogList(props) {
     </div>
   );
 }
+
+CatalogList.propTypes = {
+  entities: PropTypes.array.isRequired,
+  deleteEntity: PropTypes.func.isRequired
+};

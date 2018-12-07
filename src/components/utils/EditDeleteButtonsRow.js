@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import auth from "../../services/auth";
+import PropTypes from "prop-types";
 
 /**
  * Rendering a line of *edit* and *delete* buttons if the current user is
@@ -42,3 +43,9 @@ export default class EditDeleteButtonsRow extends React.Component {
     );
   }
 }
+
+EditDeleteButtonsRow.propTypes = {
+  editPath: PropTypes.string.isRequired,
+  deleteEntity: PropTypes.func.isRequired,
+  deleteMsg: PropTypes.string
+};

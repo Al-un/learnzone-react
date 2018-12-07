@@ -3,6 +3,14 @@ import { Link } from "react-router-dom";
 import EditDeleteButtonsRow from "../utils/EditDeleteButtonsRow";
 import auth from "../../services/auth";
 import IdHiddenInput from "../utils/IdHiddenInput";
+import PropTypes from "prop-types";
+
+const ARTICLE_ATTRIBUTES = {
+  id: PropTypes.number,
+  name: PropTypes.string,
+  description: PropTypes.string,
+  user_id: PropTypes.number
+};
 
 /**
  * Article form
@@ -44,6 +52,12 @@ export function ArticleForm(props) {
   );
 }
 
+ArticleForm.propTypes = {
+  entity: PropTypes.shape(ARTICLE_ATTRIBUTES).isRequired,
+  handleValueChange: PropTypes.func.isRequired,
+  handleFormSubmit: PropTypes.func.isRequired
+};
+
 /**
  * Article details
  * @param {*} props
@@ -74,6 +88,11 @@ export function ArticleDetail(props) {
     </div>
   );
 }
+
+ArticleDetail.propTypes = {
+  entity: PropTypes.shape(ARTICLE_ATTRIBUTES).isRequired,
+  enableEditionMode: PropTypes.func.isRequired
+};
 
 /**
  * Articles list
@@ -120,3 +139,8 @@ export function ArticleList(props) {
     </div>
   );
 }
+
+ArticleList.propTypes = {
+  entities: PropTypes.array.isRequired,
+  deleteEntity: PropTypes.func.isRequired
+};
