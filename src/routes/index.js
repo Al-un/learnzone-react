@@ -1,9 +1,9 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import CatalogsContainer from "../containers/CatalogsContainer";
-import CatalogContainer from "../containers/CatalogContainer";
-import ArticlesContainer from "../containers/ArticlesContainer";
-import ArticleContainer from "../containers/ArticleContainer";
+import CatalogsContainer from "../containers/products/CatalogsContainer";
+import CatalogContainer from "../containers/products/CatalogContainer";
+import ArticlesContainer from "../containers/products/ArticlesContainer";
+import ArticleContainer from "../containers/products/ArticleContainer";
 import MiscInfoPage from "../pages/static/MiscInfoPage";
 import CRUD from "../api/crud";
 import { Callback } from "../services/auth";

@@ -1,6 +1,6 @@
-import { CatalogForm, CatalogDetail } from "../components/Catalog";
-import entityHandler from "./hoc/entityHandler";
-import { api_get, api_post, api_patch } from "../api";
+import { CatalogForm, CatalogDetail } from "../../components/products/Catalog";
+import entityHandler from "../hoc/entityHandler";
+import { api_get, api_post, api_patch } from "../../api";
 
 const CatalogContainer = entityHandler(CatalogForm, CatalogDetail, {
   new: () => ({

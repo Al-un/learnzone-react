@@ -1,6 +1,6 @@
-import { ArticleForm, ArticleDetail } from "../components/Article";
-import entityHandler from "./hoc/entityHandler";
-import { api_get, api_post, api_patch } from "../api";
+import { ArticleForm, ArticleDetail } from "../../components/products/Article";
+import entityHandler from "../hoc/entityHandler";
+import { api_get, api_post, api_patch } from "../../api";
 
 const ArticleContainer = entityHandler(ArticleForm, ArticleDetail, {
   new: () => ({

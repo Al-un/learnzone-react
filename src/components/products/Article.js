@@ -1,15 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import EditDeleteButtonsRow from "./EditDeleteButtonsRow";
-import auth from "../services/auth";
+import EditDeleteButtonsRow from "../utils/EditDeleteButtonsRow";
+import auth from "../../services/auth";
+import IdHiddenInput from "../utils/IdHiddenInput";
 
+/**
+ * Article form
+ * @param {*} props
+ */
 export function ArticleForm(props) {
   return (
     <div className="container">
       <form onSubmit={props.handleFormSubmit}>
-        {props.entity.id && (
-          <input type="hidden" name="id" value={props.entity.id} />
-        )}
+        <IdHiddenInput id={props.entity.id} />
+
         <div className="form-group">
           <input
             className="w-100"
@@ -21,6 +25,7 @@ export function ArticleForm(props) {
             onChange={props.handleValueChange}
           />
         </div>
+
         <div className="form-group">
           <textarea
             className="w-100"
@@ -30,6 +35,7 @@ export function ArticleForm(props) {
             onChange={props.handleValueChange}
           />
         </div>
+
         <button type="submit" className="btn btn-success btn-lg">
           Save
         </button>
@@ -38,6 +44,10 @@ export function ArticleForm(props) {
   );
 }
 
+/**
+ * Article details
+ * @param {*} props
+ */
 export function ArticleDetail(props) {
   return (
     <div className="card w-100">
@@ -46,9 +56,11 @@ export function ArticleDetail(props) {
           Article#{props.entity.id} {props.entity.name}
         </h3>
       </div>
+
       <div className="card-body">
         <span className="card-text">{props.entity.description}</span>
       </div>
+
       <div className="card-footer">
         {props.auth.isAuthenticated() && (
           <button
@@ -63,6 +75,10 @@ export function ArticleDetail(props) {
   );
 }
 
+/**
+ * Articles list
+ * @param {*} props
+ */
 export function ArticleList(props) {
   return (
     <div className="container-fluid articles-list">
@@ -75,10 +91,12 @@ export function ArticleList(props) {
                 <div className="card-header">
                   <span>{article.name}</span>
                 </div>
+
                 <div className="card-body">
                   <p>{article.description}</p>
                 </div>
               </Link>
+
               <div className="card-footer">
                 <span>Owner: {article.user_id}</span>
                 <EditDeleteButtonsRow
@@ -90,6 +108,7 @@ export function ArticleList(props) {
           </div>
         ))}
       </div>
+
       {auth.isAuthenticated && (
         <div className="row">
           <Link to="/articles/new" className="btn btn-outline-primary">
@@ -101,11 +120,3 @@ export function ArticleList(props) {
     </div>
   );
 }
-
-// const Article = toggleEditDisplayHoc(ArticleForm, ArticleDetail, {
-//   create: article => api_post(`/articles/`, article),
-//   update: article => api_patch(`/articles/${article.id}`, article),
-//   redirect: id => `/articles/${id}`
-// });
-
-// export default Article;

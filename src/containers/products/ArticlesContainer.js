@@ -1,6 +1,6 @@
-import { ArticleList } from "../components/Article";
-import entitiesHandler from "./hoc/entitiesHandler";
-import { api_get, api_delete } from "../api";
+import { ArticleList } from "../../components/products/Article";
+import entitiesHandler from "../hoc/entitiesHandler";
+import { api_get, api_delete } from "../../api";
 
 const ArticlesContainer = entitiesHandler(ArticleList, {
   load: () => api_get("/articles"),

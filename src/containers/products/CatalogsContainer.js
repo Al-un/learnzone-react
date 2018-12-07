@@ -1,6 +1,6 @@
-import { CatalogList } from "../components/Catalog";
-import entitiesHandler from "./hoc/entitiesHandler";
-import { api_get, api_delete } from "../api";
+import { CatalogList } from "../../components/products/Catalog";
+import entitiesHandler from "../hoc/entitiesHandler";
+import { api_get, api_delete } from "../../api";
 
 const CatalogsContainer = entitiesHandler(CatalogList, {
   load: () => api_get("/catalogs"),

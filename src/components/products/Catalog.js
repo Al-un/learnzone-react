@@ -1,15 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import EditDeleteButtonsRow from "./EditDeleteButtonsRow";
-import auth from "../services/auth";
+import EditDeleteButtonsRow from "../utils/EditDeleteButtonsRow";
+import auth from "../../services/auth";
+import IdHiddenInput from "../utils/IdHiddenInput";
 
+/**
+ * Catalog form
+ * @param {*} props
+ */
 export function CatalogForm(props) {
   return (
     <div className="container">
       <form onSubmit={props.handleFormSubmit}>
-        {props.entity.id && (
-          <input type="hidden" name="id" value={props.entity.id} />
-        )}
+        <IdHiddenInput id={props.entity.id} />
+
         <div className="form-group">
           <input
             className="col col-md-2"
@@ -30,6 +34,7 @@ export function CatalogForm(props) {
             onChange={props.handleValueChange}
           />
         </div>
+
         <div className="form-group">
           <textarea
             className="w-100"
@@ -39,6 +44,7 @@ export function CatalogForm(props) {
             onChange={props.handleValueChange}
           />
         </div>
+
         <button type="submit" className="btn btn-primary">
           Save
         </button>
@@ -47,6 +53,10 @@ export function CatalogForm(props) {
   );
 }
 
+/**
+ * Catalog details
+ * @param {*} props
+ */
 export function CatalogDetail(props) {
   return (
     <div className="card w-100">
@@ -55,9 +65,11 @@ export function CatalogDetail(props) {
           Catalog#{props.entity.id} [{props.entity.code}] {props.entity.name}
         </h3>
       </div>
+
       <div className="card-body">
         <span className="card-text">{props.entity.description}</span>
       </div>
+
       <div className="card-footer">
         {props.auth.isAuthenticated() && (
           <button
@@ -72,6 +84,10 @@ export function CatalogDetail(props) {
   );
 }
 
+/**
+ * Catalogs list
+ * @param {*} props
+ */
 export function CatalogList(props) {
   return (
     <div className="container-fluid catalogs-list">
@@ -86,10 +102,12 @@ export function CatalogList(props) {
                     {catalog.code}: {catalog.name}
                   </span>
                 </div>
+
                 <div className="card-body">
                   <p>{catalog.description}</p>
                 </div>
               </Link>
+
               <div className="card-footer">
                 <span>Owner: {catalog.user_id}</span>
                 <EditDeleteButtonsRow
@@ -101,6 +119,7 @@ export function CatalogList(props) {
           </div>
         ))}
       </div>
+
       {auth.isAuthenticated() && (
         <div className="row">
           <Link to="/catalogs/new" className="btn btn-outline-primary">
@@ -112,11 +131,3 @@ export function CatalogList(props) {
     </div>
   );
 }
-
-// const Catalog = toggleEditDisplayHoc(CatalogForm, CatalogDetail, {
-//   create: catalog => api_post(`/catalogs/`, catalog),
-//   update: catalog => api_patch(`/catalogs/${catalog.id}`, catalog),
-//   redirect: id => `/catalogs/${id}`
-// });
-
-// export default Catalog;
