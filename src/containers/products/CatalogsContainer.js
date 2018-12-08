@@ -12,15 +12,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-// const CatalogsContainer = entitiesHandler(CatalogList);
-// const CatalogsContainer = entitiesHandler(CatalogList, {
-//   load: () => api_get("/catalogs"),
-//   delete: id => api_delete(`/catalogs/${id}`)
-// });
-
-const ReduxedCatalogs = connect(
+const CatalogsContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(entitiesHandler(CatalogList));
 
-export default ReduxedCatalogs;
+export default CatalogsContainer;

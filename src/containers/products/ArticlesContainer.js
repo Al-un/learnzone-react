@@ -1,10 +1,20 @@
 import { ArticleList } from "../../components/products/Article";
 import entitiesHandler from "../hoc/entitiesHandler";
-import { api_get, api_delete } from "../../api";
+import { loadArticles, deleteArticle } from "../../redux/products/article";
+import { connect } from "react-redux";
 
-const ArticlesContainer = entitiesHandler(ArticleList, {
-  load: () => api_get("/articles"),
-  delete: id => api_delete(`/articles/${id}`)
-});
+const mapStateToProps = state => ({ entities: state.articles.list });
+
+const mapDispatchToProps = dispatch => {
+  return {
+    load: () => dispatch(loadArticles(dispatch)),
+    delete: id => dispatch(deleteArticle(id))
+  };
+};
+
+const ArticlesContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(entitiesHandler(ArticleList));
 
 export default ArticlesContainer;
