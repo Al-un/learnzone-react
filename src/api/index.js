@@ -94,8 +94,8 @@ export function api_delete(url, body) {
  */
 function logResponse(url, method) {
   return response => {
-    console.log(`Receive ${method} response from ${url}:`);
-    console.log(response);
+    console.log(`Receive ${method} response from ${url}: ${JSON.stringify(response)}`);
+    // console.log(response);
     return response;
   };
 }

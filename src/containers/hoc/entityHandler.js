@@ -1,6 +1,5 @@
 import React from "react";
 import CRUD from "../../api/crud";
-import auth from "../../services/auth";
 import history from "../../routes/history";
 
 /**
@@ -16,7 +15,6 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
       super(props);
 
       this.state = {
-        editing: this.isEditing(props.crud),
         redirect: undefined,
         entity: this.props.crud === CRUD.NEW ? crudFunctions.new() : undefined
       };
@@ -31,38 +29,19 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
       let id = this.props.match.params.id;
       // hard coded "new" id
       if (id && id !== CRUD.NEW) {
-        console.log(`${this.name} loading #${id}`);
+        // console.log(`${this.name} loading #${id}`);
         crudFunctions
           .load(this.props.match.params.id)
           .then(response => response.json())
-          .then(data => this.setState({ entity: data }));
+          .then(data => {
+            console.log(`Received data for entity#${id}: ${JSON.stringify(data)}`);
+            // console.log(data);
+            this.setState({ entity: data });
+          });
       } else {
         console.log("No loading entity");
       }
     }
-
-    /**
-     *
-     * @param {String} crud crud status
-     * @return true if crud triggers edition
-     */
-    isEditing(crud) {
-      return CRUD.NEW === crud || CRUD.EDIT === crud;
-    }
-
-    /**
-     * Switch to edition mode
-     */
-    enableEditionMode = event => {
-      this.setState({ editing: true });
-    };
-
-    /**
-     * Switch to display only
-     */
-    disableEditionMode = event => {
-      this.setState({ editing: false });
-    };
 
     /**
      * Submit the form from the FormComponent. The submitEntityFn handles
@@ -78,8 +57,11 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
       if (this.state.entity.id) {
         crudFunctions
           .update(this.state.entity)
+          .then(resp => {
+            console.log(`receive update response ${JSON.stringify(resp)}`);
+            history.replace(crudFunctions.redirect(this.state.entity.id));
+          })
           .catch(err => console.err("Error: " + err));
-        this.disableEditionMode();
       }
       // no id: creating new entity
       else {
@@ -90,8 +72,11 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
             console.log(`receive data ${JSON.stringify(data)}`);
             if (data) {
               history.replace(crudFunctions.redirect(data.id));
+            } else {
+              console.err(
+                "data not received: to be handled (entityHandler#handleFormSubmit)"
+              );
             }
-            this.disableEditionMode();
           })
           .catch(err => console.err("Error: " + err));
       }
@@ -114,7 +99,7 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
     render() {
       // render detail or form only if entity is loaded
       if (this.state.entity) {
-        return this.state.editing ? (
+        return CRUD.NEW === this.props.crud || CRUD.EDIT === this.props.crud ? (
           // rendering new or edit form
           <FormComponent
             entity={this.state.entity}
@@ -123,11 +108,7 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
           />
         ) : (
           // rendering entity details
-          <DetailComponent
-            entity={this.state.entity}
-            enableEditionMode={this.enableEditionMode}
-            auth={auth}
-          />
+          <DetailComponent entity={this.state.entity} />
         );
       }
       // Hold on!
