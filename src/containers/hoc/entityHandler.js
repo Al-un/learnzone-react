@@ -1,6 +1,7 @@
 import React from "react";
 import CRUD from "../../api/crud";
 import history from "../../routes/history";
+import Log from "../../services/log";
 
 /**
  *
@@ -20,7 +21,7 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
       };
       this.name = FormComponent.name + DetailComponent.name;
 
-      console.log(
+      Log.debug(
         `[entityHandler.new] for ${this.name} props: ${JSON.stringify(props)}`
       );
     }
@@ -29,17 +30,19 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
       let id = this.props.match.params.id;
       // hard coded "new" id
       if (id && id !== CRUD.NEW) {
-        // console.log(`${this.name} loading #${id}`);
+        // Log.debug(`${this.name} loading #${id}`);
         crudFunctions
           .load(this.props.match.params.id)
           .then(response => response.json())
           .then(data => {
-            console.log(`Received data for entity#${id}: ${JSON.stringify(data)}`);
-            // console.log(data);
+            Log.debug(
+              `Received data for entity#${id}: ${JSON.stringify(data)}`
+            );
+            // Log.debug(data);
             this.setState({ entity: data });
           });
       } else {
-        console.log("No loading entity");
+        Log.debug("No loading entity");
       }
     }
 
@@ -50,7 +53,7 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
     handleFormSubmit = event => {
       // Not using standard form feature
       event.preventDefault();
-      // console.log(`submitting entity ${JSON.stringify(this.state)}`);
+      // Log.debug(`submitting entity ${JSON.stringify(this.state)}`);
 
       // Distinguish create or update
       // Cannot rely on props.crud as a new entitiy might be edited again
@@ -58,10 +61,10 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
         crudFunctions
           .update(this.state.entity)
           .then(resp => {
-            console.log(`receive update response ${JSON.stringify(resp)}`);
+            Log.debug(`receive update response ${JSON.stringify(resp)}`);
             history.replace(crudFunctions.redirect(this.state.entity.id));
           })
-          .catch(err => console.err("Error: " + err));
+          .catch(err => Log.error("Error: ", err));
       }
       // no id: creating new entity
       else {
@@ -69,16 +72,14 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
           .create(this.state.entity)
           .then(response => response.json())
           .then(data => {
-            console.log(`receive data ${JSON.stringify(data)}`);
+            Log.debug(`receive data ${JSON.stringify(data)}`);
             if (data) {
               history.replace(crudFunctions.redirect(data.id));
             } else {
-              console.err(
-                "data not received: to be handled (entityHandler#handleFormSubmit)"
-              );
+              Log.error("data not received (entityHandler#handleFormSubmit)");
             }
           })
-          .catch(err => console.err("Error: " + err));
+          .catch(err => Log.error("Error: ", err));
       }
     };
 
@@ -86,14 +87,14 @@ function entityHandler(FormComponent, DetailComponent, crudFunctions) {
      * Update the local state whenever a input is modified
      */
     handleValueChange = event => {
-      // console.log(`New value of ${event.target.name} is ${event.target.value}`);
+      // Log.debug(`New value of ${event.target.name} is ${event.target.value}`);
       this.setState({
         entity: {
           ...this.state.entity,
           [event.target.name]: event.target.value
         }
       });
-      // console.log(`updating entity ${JSON.stringify(this.state)}`);
+      // Log.debug(`updating entity ${JSON.stringify(this.state)}`);
     };
 
     render() {

@@ -1,3 +1,5 @@
+import Log from "../../services/log";
+
 // Actions
 const LOAD = "learnzone/catalog/LOAD";
 const LOADED = "learnzone/catalog/LOADED";
@@ -13,15 +15,15 @@ const reducer = (state = {}, action = {}) => {
   switch (action.type) {
     case LOADED:
       const catalogs = action.payload;
-      console.log(`[Redux] Loaded ${catalogs.length} catalog(s)`);
+      Log.info(`Loaded ${catalogs.length} catalog(s)`, {
+        tags: ["Redux", "Catalog"]
+      });
       return { ...state, list: catalogs };
 
     case DELETED:
       const id = action.payload;
-      console.log(`[Redux] Deleted catalog#${id}`);
-      const updatedList = state.list.filter(
-        catalog => catalog.id !== id
-      );
+      Log.info(`Deleted catalog#${id}`, { tags: ["Redux", "Catalog"] });
+      const updatedList = state.list.filter(catalog => catalog.id !== id);
       return {
         ...state,
         list: updatedList

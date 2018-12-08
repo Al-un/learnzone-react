@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import auth from "../../services/auth";
 import { api_delete, api_post, api_get } from "../../api";
 import { DeleteButton } from "../utils/Buttons";
+import Log from "../../services/log";
 
 /**
  * Listing article publications regardless from article or from catalog
@@ -122,12 +123,15 @@ export default class ArticlePublicationsManager extends React.Component {
   createPublication = productId => {
     const publication = this.props.buildPublication(productId);
 
-    console.log(`Creating publication ${JSON.stringify(publication)}`);
+    Log.info(`Creating publication ${JSON.stringify(publication)}`, {
+      tags: "ArticlePublication"
+    });
 
     return api_post(`/article_publications/`, publication)
       .then(resp => {
-        console.log(`Creation response status: ${resp.status}`);
-        // console.log(resp);
+        Log.debug(`Creation response status: ${resp.status}`, {
+          tags: "ArticlePublication"
+        });
         return resp.json();
       })
       .then(data =>
@@ -139,11 +143,12 @@ export default class ArticlePublicationsManager extends React.Component {
    * Deleting a publication
    */
   deletePublication = id => {
-    console.log(`deleting publication#${id}`);
+    Log.info(`deleting publication#${id}`);
 
     api_delete(`/article_publications/${id}`).then(resp => {
-      console.log(`Deletion response status: ${resp.status}`);
-      // console.log(resp);
+      Log.debug(`Deletion response status: ${resp.status}`, {
+        tags: "ArticlePublication"
+      });
       if (resp.status === 204) {
         this.setState(prevState => ({
           publications: prevState.publications.filter(publ => publ.id !== id)

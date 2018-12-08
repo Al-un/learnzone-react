@@ -5,6 +5,7 @@ import { api_delete } from "../../api";
 import history from "../../routes/history";
 import { CATALOG_ATTRIBUTES } from "./Catalog";
 import ArticlePublicationsManager from "./ArticlePublication";
+import Log from "../../services/log";
 
 /**
  * Catalog details
@@ -15,10 +16,8 @@ export default class CatalogDetail extends React.Component {
    * Deleting the shown catalog
    */
   handleCatalogDeletion = id => {
-    console.log(`deleting catalog#${id}`);
+    Log.info(`deleting catalog#${id}`, {tags: "Catalog"});
     api_delete(`/catalogs/${id}`).then(resp => {
-      // console.log("Deletion response:");
-      // console.log(resp);
       history.replace("/catalogs/");
     });
   };

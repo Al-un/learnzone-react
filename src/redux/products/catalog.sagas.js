@@ -1,28 +1,24 @@
-import {
-  LOADED,
-  DELETED,
-  LOAD,
-  DELETE
-} from "./catalog";
 import { call, put, takeEvery } from "redux-saga/effects";
-import { api_get, api_delete } from "../../api";
+
+import { LOADED, DELETED, LOAD, DELETE } from "./catalog";
+
+import { api_delete, api_get_json } from "../../api";
+import Log from "../../services/log";
 
 const ENTITY_API_ROOT_PATH = "/catalogs/";
 
-function get(url) {
-  return api_get(url).then(resp => resp.json());
-}
-
 function* loadCatalogs() {
-  console.debug("[Saga] Loading catalogs");
-  const catalogs = yield call(get, ENTITY_API_ROOT_PATH);
-  console.log(`[Saga] Loaded ${catalogs.length} catalog(s)`);
+  Log.debug("Loading catalogs", { tags: ["Saga", "Catalog"] });
+  const catalogs = yield call(api_get_json, ENTITY_API_ROOT_PATH);
+  Log.info(`Loaded ${catalogs.length} catalog(s)`, {
+    tags: ["Saga", "Catalog"]
+  });
   yield put({ type: LOADED, payload: catalogs });
 }
 
 function* deleteCatalog(action) {
   const id = action.payload;
-  console.debug(`[Saga] Deleting catalog#${id}`);
+  Log.info(`Deleting catalog#${id}`, { tags: ["Saga", "Catalog"] });
   yield call(api_delete, `${ENTITY_API_ROOT_PATH}${id}`);
   yield put({ type: DELETED, payload: id });
 }

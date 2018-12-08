@@ -5,6 +5,7 @@ import { api_delete } from "../../api";
 import history from "../../routes/history";
 import { ARTICLE_ATTRIBUTES } from "./Article";
 import ArticlePublicationsManager from "./ArticlePublication";
+import Log from "../../services/log";
 
 /**
  * Article details
@@ -15,10 +16,8 @@ export default class ArticleDetail extends React.Component {
    * Deleting the shown article
    */
   handleArticleDeletion = id => {
-    console.log(`deleting article#${id}`);
+    Log.info(`deleting article#${id}`, {tags: "Article"});
     api_delete(`/articles/${id}`).then(resp => {
-      // console.log("Deletion response:");
-      // console.log(resp);
       history.replace("/articles/");
     });
   };

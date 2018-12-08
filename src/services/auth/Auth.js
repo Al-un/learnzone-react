@@ -3,6 +3,7 @@ import history from "../../routes/history";
 import { AUTH0_CONFIG } from "./auth0_config";
 import { ACCESS_TOKEN, ID_TOKEN, EXPIRES_AT, SAVED_URL } from "./";
 import { ROOT_PATH } from "../../routes";
+import Log from "../log";
 
 /**
  * Auth0 authentication handler
@@ -21,7 +22,7 @@ export default class Auth {
   });
 
   constructor() {
-    console.log("=== Init === Contructing Auth instance");
+    Log.debug("Contructing Auth instance", { tags: "Auth" });
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
@@ -37,7 +38,9 @@ export default class Auth {
       redirect_url = window.location.pathname;
       localStorage.setItem(SAVED_URL, redirect_url);
     }
-    console.log(`[Authentication] Auth0 login with saving: ${redirect_url}`);
+    Log.info(` Auth0 login with saving: ${redirect_url}`, {
+      tags: "Authentication"
+    });
     this.auth0.authorize();
   }
 
@@ -48,8 +51,7 @@ export default class Auth {
     this.auth0.parseHash((err, authResult) => {
       // Any error
       if (err) {
-        console.error(`[Authentication] ${err.error}: ${err.errorDescription}`);
-        console.error(err);
+        Log.error(`[Authentication] Error`, err, { tags: "Auth" });
         history.replace(ROOT_PATH);
       }
 
@@ -59,16 +61,18 @@ export default class Auth {
         this.setSession(authResult);
         // redirection
         let redirectUrl = localStorage.getItem(SAVED_URL) || ROOT_PATH;
-        console.log(`[Authentication] success and redirect to ${redirectUrl}`);
+        Log.info(`[Authentication] success and redirect to ${redirectUrl}`, {
+          tags: "Auth"
+        });
         localStorage.removeItem(SAVED_URL);
         history.replace(redirectUrl);
       }
 
       // WTF?
       else {
-        console.error(
-          `[Authentication] abnormal auth: ${JSON.stringify(authResult)}`
-        );
+        Log.error(`[Authentication] abnormal auth:`, authResult, {
+          tags: "Auth"
+        });
         history.replace(ROOT_PATH);
       }
     });

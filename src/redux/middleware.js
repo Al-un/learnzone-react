@@ -1,11 +1,13 @@
+import Log from "../services/log";
+
 /**
  * Logging all Redux transactions
  * @param {*} store
  */
 const logger = store => next => action => {
-  console.log("[Redux] Dispatching", action);
+  Log.info("Dispatching", action, { tags: "Redux" });
   const result = next(action);
-  console.log("[Redux] Next state", store.getState());
+  Log.debug("Next state", store.getState(), { tags: "Redux" });
   return result;
 };
 
@@ -17,7 +19,7 @@ const crachReporter = store => next => action => {
   try {
     return next(action);
   } catch (err) {
-    console.error("[Redux] Exception", err);
+    Log.error("Exception", err, { tags: "Redux" });
   }
 };
 
