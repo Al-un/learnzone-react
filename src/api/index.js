@@ -19,11 +19,7 @@ export async function api_get(url) {
 
   return fetch(`${API}${url}`, {
     headers: HEADERS
-  }).then(response => {
-    console.log(`Receive GET response from ${url}:`);
-    console.log(response);
-    return response;
-  });
+  }).then(logResponse(url, "GET"));
 }
 
 /**
