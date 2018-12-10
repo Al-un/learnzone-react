@@ -7,46 +7,73 @@ import { ARTICLE_ATTRIBUTES } from "./Article";
  * Article form
  * @param {*} props
  */
-function ArticleForm(props) {
-  return (
-    <div className="container">
-      <form onSubmit={props.handleFormSubmit}>
-        <IdHiddenInput id={props.entity.id} />
+class ArticleForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      entity: this.props.entity
+    };
+  }
 
-        <div className="form-group">
-          <input
-            className="w-100"
-            type="text"
-            name="name"
-            placeholder="Name"
-            required={true}
-            value={props.entity.name}
-            onChange={props.handleValueChange}
-          />
-        </div>
+  /**
+   * Update the local state whenever a input is modified
+   */
+  handleValueChange = event => {
+    // Log.debug(`New value of ${event.target.name} is ${event.target.value}`);
+    this.setState({
+      entity: {
+        ...this.state.entity,
+        [event.target.name]: event.target.value
+      }
+    });
+    // Log.debug(`updating entity ${JSON.stringify(this.state)}`);
+  };
+  
+  handleFormSubmit = event => {
+    event.preventDefault();
+    this.props.saveEntity(this.state.entity);
+  };
 
-        <div className="form-group">
-          <textarea
-            className="w-100"
-            name="description"
-            placeholder="Description"
-            value={props.entity.description || undefined}
-            onChange={props.handleValueChange}
-          />
-        </div>
+  render() {
+    return (
+      <div className="container">
+        <form onSubmit={this.handleFormSubmit}>
+          <IdHiddenInput id={this.state.entity.id} />
 
-        <button type="submit" className="btn btn-success btn-lg">
-          Save
-        </button>
-      </form>
-    </div>
-  );
+          <div className="form-group">
+            <input
+              className="w-100"
+              type="text"
+              name="name"
+              placeholder="Name"
+              required={true}
+              value={this.state.entity.name}
+              onChange={this.handleValueChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <textarea
+              className="w-100"
+              name="description"
+              placeholder="Description"
+              value={this.state.entity.description || undefined}
+              onChange={this.handleValueChange}
+            />
+          </div>
+
+          <button type="submit" className="btn btn-success btn-lg">
+            Save
+          </button>
+        </form>
+      </div>
+    );
+  }
 }
 
 ArticleForm.propTypes = {
   entity: PropTypes.shape(ARTICLE_ATTRIBUTES).isRequired,
-  handleValueChange: PropTypes.func.isRequired,
-  handleFormSubmit: PropTypes.func.isRequired
+  saveEntity: PropTypes.func.isRequired
 };
 
 export default ArticleForm;

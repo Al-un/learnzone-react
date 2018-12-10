@@ -1,23 +1,33 @@
 /**
  * Extract tags from all arguments.
- * @param {String} msg
  * @param {Array} args
  */
-const extractTags = (msg, args) => {
+const extractTags = args => {
   // extract tags
   let tags = [];
-  args.forEach(arg => {
-    if (arg.tags) {
+  // if tags are string or array:
+  let filteredArgs = args.filter(arg => {
+    // Array is assumed to be array of string
+    if (Array.isArray(arg)) {
+      tags = tags.concat(arg);
+    }
+    // Simple string
+    else if (typeof arg === "string") {
+      tags.push(arg);
+    }
+    // Parameters
+    else if (arg && arg.tags) {
       tags = tags.concat(arg.tags);
       delete arg.tags;
     }
+    // Not a tag
+    else {
+      return true;
+    }
+    // all checked cases are false:
+    return false;
   });
-
-  // Format tags
-  tags = tags.map(tag => `[${tag}]`).join('');
-  msg = `${tags} ${msg}`;
-
-  return [msg, args];
+  return [filteredArgs, tags];
 };
 
 /**
@@ -25,36 +35,45 @@ const extractTags = (msg, args) => {
  * is an array of Objects.
  *
  * Check if object if empty: https://stackoverflow.com/a/32108184/4906586
- * @param {String} msg
  * @param {Array} args
  */
-const mergeArgs = (msg, args) => {
-  const mergedArgs = args.length
-    ? args.reduce((prevObj, nextObj) => {
-        return Object.keys(nextObj).length > 0
-          ? Object.assign(prevObj, nextObj)
-          : prevObj;
-      })
-    : undefined;
-
-  return [msg, mergedArgs];
+const mergeArgs = args => {
+  if (args.length) {
+    let mergedArgs = {};
+    args.forEach(arg => (mergedArgs = Object.assign(mergedArgs, arg)));
+    return mergedArgs;
+  }
+  return undefined;
 };
 
-const formatLogs = (msg, args, callback) => {
+/**
+ *
+ * @param {String} msg main log message
+ * @param {Array} args optional log arguments
+ * @param {function} consoleLog console logging function
+ */
+const formatLogs = (msg, args, consoleLog) => {
+  let tags;
   // extract tags
-  [msg, args] = extractTags(msg, args);
+  [args, tags] = extractTags(args);
 
   // merge args
-  [msg, args] = mergeArgs(msg, args);
+  if (args.length) {
+    args = mergeArgs(args);
+  }
 
+  // Format tags
+  const formattedTags = tags.map(tag => `[${tag}]`).join("");
   // timestamp
   const time = new Date().toLocaleTimeString("en", { hour12: false });
-  msg = `${time}${msg}`;
+  // Log message
+  const formattedMsg = `${time} ${formattedTags} ${msg}`;
 
+  // Console logging
   if (args && Object.keys(args).length > 0) {
-    callback(msg, args);
+    consoleLog(formattedMsg, args);
   } else {
-    callback(msg);
+    consoleLog(formattedMsg);
   }
 };
 

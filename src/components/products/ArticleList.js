@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import EditDeleteButtonsRow from "../utils/EditDeleteButtonsRow";
 import auth from "../../services/auth";
 import PropTypes from "prop-types";
+import { ARTICLE_PATH } from "./Article";
 
 /**
  * Articles list
@@ -16,9 +17,11 @@ function ArticleList(props) {
         {props.entities.map((article, index) => (
           <div key={article.id} className="col-12 col-md-3 mt-3">
             <div className="card">
-              <Link to={`/articles/${article.id}`}>
+              <Link to={`${ARTICLE_PATH}/${article.id}`}>
                 <div className="card-header">
-                  <span>{article.name}</span>
+                  <span>
+                    {article.id}: {article.name}
+                  </span>
                 </div>
 
                 <div className="card-body">
@@ -32,8 +35,8 @@ function ArticleList(props) {
               <div className="card-footer">
                 <span>Owner: {article.user.auth0_id}</span>
                 <EditDeleteButtonsRow
-                  editPath={`/articles/${article.id}/edit`}
-                  deleteEntity={() => props.deleteEntity(article.id)}
+                  editPath={`${ARTICLE_PATH}/${article.id}/edit`}
+                  deleteFunc={() => props.deleteEntity(article.id)}
                 />
               </div>
             </div>
@@ -43,7 +46,7 @@ function ArticleList(props) {
 
       {auth.isAuthenticated && (
         <div className="row">
-          <Link to="/articles/new" className="btn btn-outline-primary">
+          <Link to={`${ARTICLE_PATH}/new`} className="btn btn-outline-primary">
             <span className="fas fa-plus" />
             <span>Create an article</span>
           </Link>

@@ -13,11 +13,11 @@ export default class EditDeleteButtonsRow extends React.Component {
    * Ensure confirmation before deletion. Confirmation message can be customized
    * via the `deleteMsg` props
    */
-  handleDeletion = () => {
+  deleteFunc = () => {
     let confirmMsg = this.props.deleteMsg || "Confirm deletion?";
     let confirmDel = window.confirm(confirmMsg);
     if (confirmDel) {
-      this.props.deleteEntity();
+      this.props.deleteFunc();
     }
   };
 
@@ -33,7 +33,7 @@ export default class EditDeleteButtonsRow extends React.Component {
           Edit
         </Link>
 
-        <DeleteButton handleDeletion={this.handleDeletion} />
+        <DeleteButton deleteFunc={this.deleteFunc} />
       </div>
     ) : (
       // TODO: how to display it?
@@ -44,6 +44,6 @@ export default class EditDeleteButtonsRow extends React.Component {
 
 EditDeleteButtonsRow.propTypes = {
   editPath: PropTypes.string.isRequired,
-  deleteEntity: PropTypes.func.isRequired,
+  deleteFunc: PropTypes.func.isRequired,
   deleteMsg: PropTypes.string
 };

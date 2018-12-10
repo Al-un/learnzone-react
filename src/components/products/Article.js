@@ -1,9 +1,16 @@
 import PropTypes from "prop-types";
-import ArticleForm from "./ArticleForm";
-import ArticleDetail from "./ArticleDetail";
-import ArticleList from "./ArticleList";
-import { api_get, api_post, api_patch } from "../../api";
 
+/**
+ * API root path
+ */
+const ARTICLE_API_PATH = "/articles";
+/**
+ * UI root path
+ */
+const ARTICLE_PATH = "/articles";
+/**
+ * Article definition
+ */
 const ARTICLE_ATTRIBUTES = {
   id: PropTypes.number,
   name: PropTypes.string,
@@ -11,20 +18,13 @@ const ARTICLE_ATTRIBUTES = {
   user_id: PropTypes.number
 };
 
-const ARTICLE_CRUD = {
-  new: () => ({
-    name: ""
-  }),
-  load: id => api_get(`/articles/${id}`),
-  create: article => api_post(`/articles/`, article),
-  update: article => api_patch(`/articles/${article.id}`, article),
-  redirect: id => `/articles/${id}`
-};
+const generateNewArticle = () => ({
+  name: ""
+});
 
 export {
+  ARTICLE_API_PATH,
+  ARTICLE_PATH,
   ARTICLE_ATTRIBUTES,
-  ARTICLE_CRUD,
-  ArticleForm,
-  ArticleDetail,
-  ArticleList
+  generateNewArticle
 };

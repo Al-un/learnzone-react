@@ -1,19 +1,55 @@
-import {
-  CatalogForm,
-  CatalogDetail,
-  CATALOG_CRUD
-} from "../../components/products/Catalog";
+// -------------------- Import
+// React
+import { connect } from "react-redux";
+// HOC
 import entityHandler from "../hoc/entityHandler";
-import PropTypes from "prop-types";
+// Products
+import CatalogForm from "../../components/products/CatalogForm";
+import CatalogDetail from "../../components/products/CatalogDetail";
+import {
+  loadCatalog,
+  newCatalog,
+  createCatalog,
+  updateCatalog,
+  deleteCatalog,
+  clearCatalog
+} from "../../redux/products/catalog";
+import history from "../../routes/history";
+import { CATALOG_PATH } from "../../components/products/Catalog";
 
-const CatalogContainer = entityHandler(
-  CatalogForm,
-  CatalogDetail,
-  CATALOG_CRUD
-);
+const mapStateToProps = state => ({ entity: state.catalogs.entity });
 
-CatalogContainer.propTypes = {
-  crud: PropTypes.string
+const mapDispatchToProps = dispatch => {
+  return {
+    load: id => dispatch(loadCatalog(id)),
+    new: () => dispatch(newCatalog()),
+    create: catalog =>
+      dispatch(
+        createCatalog(catalog, {
+          postProcessing: catalog =>
+            history.push(`${CATALOG_PATH}/${catalog.id}`)
+        })
+      ),
+    update: catalog =>
+      dispatch(
+        updateCatalog(catalog, {
+          postProcessing: catalog =>
+            history.push(`${CATALOG_PATH}/${catalog.id}`)
+        })
+      ),
+    deleteById: id =>
+      dispatch(
+        deleteCatalog(id, {
+          postProcessing: () => history.push(`${CATALOG_PATH}`)
+        })
+      ),
+    unmount: () => dispatch(clearCatalog())
+  };
 };
+
+const CatalogContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(entityHandler(CatalogForm, CatalogDetail));
 
 export default CatalogContainer;

@@ -36,14 +36,14 @@ CreateButton.defaultProps = {
  * Delete button can only delete via an Ajax request
  */
 const DeleteButton = props => (
-  <button className="btn btn-danger btn-sm" onClick={props.handleDeletion}>
+  <button className="btn btn-danger btn-sm" onClick={props.deleteFunc}>
     <span className="fas fa-trash" />
     <span>Delete</span>
   </button>
 );
 
 DeleteButton.propTypes = {
-  handleDeletion: PropTypes.func.isRequired
+  deleteFunc: PropTypes.func.isRequired
 };
 
 export { CreateButton, DeleteButton };

@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN } from "../services/auth";
 import Log from "../services/log";
 
-const API =
+const API_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
     : "https://learnzone-rails.herokuapp.com";
@@ -17,14 +17,9 @@ const HEADERS = {
  * @param {*} url called URL
  * @param {*} body optional body to send. Object format is JSONised
  */
-const api = (method, url, body) => {
+const call_api = (method, url, body) => {
   // Hey!
-  Log.debug(
-    `Starting ${method} request to ${API}${url} with ${JSON.stringify(body)}`,
-    {
-      tags: "API"
-    }
-  );
+  Log.debug(`${method} ${API_URL}${url} request`, body || {}, "API");
 
   // Options building, special case for GET
   const options = Object.assign(
@@ -32,63 +27,24 @@ const api = (method, url, body) => {
     method !== "GET" ? { method: method } : null,
     body ? { body: JSON.stringify(body) } : null
   );
+  Log.debug(`${method} ${API_URL}${url} options`, options, "API");
 
   // return promise
-  return fetch(`${API}${url}`, options).then(response => {
-    Log.debug(
-      `Receive ${method} response from ${url}: ${JSON.stringify(response)}`,
-      {
-        tags: "API"
-      }
-    );
-    return response;
-  });
+  return fetch(`${API_URL}${url}`, options)
+    .then(resp => {
+      Log.debug(`${method} ${API_URL}${url} response ${resp.status}`, "API");
+      return resp;
+    })
+    .then(response => response.json())
+    .catch(err => Log.error(`Error ${err}`, err, "API"));
+  // .catch(err => console.error(`API Exception ${JSON.stringify(err)}`, err))
 };
 
-/**
- * Submitting a GET request
- * @param {*} url
- */
-export function api_get(url) {
-  return api("GET", url, null);
-}
-
-export function api_get_json(url) {
-  return api("GET", url, null).then(response => response.json());
-}
-
-/**
- * Submitting a POST request
- * @param {*} url
- * @param {*} body
- */
-export function api_post(url, body) {
-  return api("POST", url, body);
-}
-
-/**
- * Submitting a PATCH request
- * @param {*} url
- * @param {*} body
- */
-export function api_patch(url, body) {
-  return api("PATCH", url, body);
-}
-
-/**
- * Submitting a PUT request
- * @param {*} url
- * @param {*} body
- */
-export function api_put(url, body) {
-  return api("PUT", url, body);
-}
-
-/**
- * Submitting a DELETE request
- * @param {*} url
- * @param {*} body
- */
-export function api_delete(url, body) {
-  return api("DELETE", url, body);
-}
+const API = {
+  get: url => call_api("GET", url),
+  post: (url, body) => call_api("POST", url, body),
+  patch: (url, body) => call_api("PATCH", url, body),
+  put: (url, body) => call_api("PUT", url, body),
+  delete: (url, body) => call_api("DELETE", url, body)
+};
+export default API;

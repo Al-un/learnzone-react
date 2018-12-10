@@ -1,27 +1,15 @@
 import React from "react";
 import EditDeleteButtonsRow from "../utils/EditDeleteButtonsRow";
 import PropTypes from "prop-types";
-import { api_delete } from "../../api";
-import history from "../../routes/history";
-import { CATALOG_ATTRIBUTES } from "./Catalog";
+import { CATALOG_ATTRIBUTES, CATALOG_PATH } from "./Catalog";
 import ArticlePublicationsManager from "./ArticlePublication";
-import Log from "../../services/log";
+import { ARTICLE_API_PATH } from "./Article";
 
 /**
  * Catalog details
  * @param {*} props
  */
 export default class CatalogDetail extends React.Component {
-  /**
-   * Deleting the shown catalog
-   */
-  handleCatalogDeletion = id => {
-    Log.info(`deleting catalog#${id}`, {tags: "Catalog"});
-    api_delete(`/catalogs/${id}`).then(resp => {
-      history.replace("/catalogs/");
-    });
-  };
-
   render() {
     return (
       <div>
@@ -39,17 +27,15 @@ export default class CatalogDetail extends React.Component {
 
           <div className="card-footer">
             <EditDeleteButtonsRow
-              editPath={`/catalogs/${this.props.entity.id}/edit`}
-              deleteEntity={() =>
-                this.handleCatalogDeletion(this.props.entity.id)
-              }
+              editPath={`${CATALOG_PATH}/${this.props.entity.id}/edit`}
+              deleteFunc={() => this.props.deleteById(this.props.entity.id)}
             />
           </div>
         </div>
 
         <ArticlePublicationsManager
           publications={this.props.entity.article_publications}
-          searchUrl={name => `/articles/search?name=${name}`}
+          searchUrl={name => `${ARTICLE_API_PATH}/search?name=${name}`}
           entityName="Article"
           buildPublication={articleId => {
             return { catalog_id: this.props.entity.id, article_id: articleId };
@@ -61,5 +47,6 @@ export default class CatalogDetail extends React.Component {
 }
 
 CatalogDetail.propTypes = {
-  entity: PropTypes.shape(CATALOG_ATTRIBUTES).isRequired
+  entity: PropTypes.shape(CATALOG_ATTRIBUTES).isRequired,
+  deleteById: PropTypes.func.isRequired
 };

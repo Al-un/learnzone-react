@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import auth from "../../services/auth";
-import { api_delete, api_post, api_get } from "../../api";
+import API from "../../api";
 import { DeleteButton } from "../utils/Buttons";
 import Log from "../../services/log";
 
@@ -26,9 +26,7 @@ class ArticlePublications extends React.Component {
               <span className="badge">
                 {auth.isAuthenticated() && (
                   <DeleteButton
-                    handleDeletion={() =>
-                      this.props.handleDeletion(publication.id)
-                    }
+                    deleteFunc={() => this.props.handleDeletion(publication.id)}
                   />
                 )}
               </span>
@@ -127,16 +125,9 @@ export default class ArticlePublicationsManager extends React.Component {
       tags: "ArticlePublication"
     });
 
-    return api_post(`/article_publications/`, publication)
-      .then(resp => {
-        Log.debug(`Creation response status: ${resp.status}`, {
-          tags: "ArticlePublication"
-        });
-        return resp.json();
-      })
-      .then(data =>
-        this.setState({ publications: this.state.publications.concat(data) })
-      );
+    return API.post(`/article_publications/`, publication).then(data =>
+      this.setState({ publications: this.state.publications.concat(data) })
+    );
   };
 
   /**
@@ -145,11 +136,12 @@ export default class ArticlePublicationsManager extends React.Component {
   deletePublication = id => {
     Log.info(`deleting publication#${id}`);
 
-    api_delete(`/article_publications/${id}`).then(resp => {
-      Log.debug(`Deletion response status: ${resp.status}`, {
-        tags: "ArticlePublication"
-      });
-      if (resp.status === 204) {
+    API.delete(`/article_publications/${id}`).then(data => {
+      Log.debug(
+        `Deletion response: ${JSON.stringify(data)}`,
+        "ArticlePublication"
+      );
+      if (data.success) {
         this.setState(prevState => ({
           publications: prevState.publications.filter(publ => publ.id !== id)
         }));
@@ -170,9 +162,7 @@ export default class ArticlePublicationsManager extends React.Component {
   search = () => {
     const name = this.state.searchName;
     const searchUrl = this.props.searchUrl(name);
-    api_get(searchUrl)
-      .then(resp => resp.json())
-      .then(data => this.setState({ searchResults: data }));
+    API.get(searchUrl).then(data => this.setState({ searchResults: data }));
   };
 
   render() {
