@@ -1,6 +1,7 @@
 import { ACCESS_TOKEN } from "../services/auth";
+import Log from "../services/log";
 
-const API =
+const API_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
     : "https://learnzone-rails.herokuapp.com";
@@ -11,91 +12,39 @@ const HEADERS = {
 };
 
 /**
- * Submitting a GET request
- * @param {*} url
+ * Uber API call method
+ * @param {*} method call method
+ * @param {*} url called URL
+ * @param {*} body optional body to send. Object format is JSONised
  */
-export async function api_get(url) {
-  console.log(`Starting GET request to ${API}${url}`);
+const call_api = (method, url, body) => {
+  // Hey!
+  Log.debug(`${method} ${API_URL}${url} request`, body || {}, "API");
 
-  return fetch(`${API}${url}`, {
-    headers: HEADERS
-  }).then(response => {
-    console.log(`Receive GET response from ${url}:`);
-    console.log(response);
-    return response;
-  });
-}
-
-/**
- * Submitting a POST request
- * @param {*} url
- * @param {*} body
- */
-export function api_post(url, body) {
-  console.log(
-    `Starting POST request to ${API}${url} with body ${JSON.stringify(body)}`
+  // Options building, special case for GET
+  const options = Object.assign(
+    { headers: HEADERS },
+    method !== "GET" ? { method: method } : null,
+    body ? { body: JSON.stringify(body) } : null
   );
+  Log.debug(`${method} ${API_URL}${url} options`, options, "API");
 
-  return fetch(`${API}${url}`, {
-    headers: HEADERS,
-    method: "POST",
-    body: JSON.stringify(body)
-  }).then(logResponse(url, "POST"));
-}
+  // return promise
+  return fetch(`${API_URL}${url}`, options)
+    .then(resp => {
+      Log.debug(`${method} ${API_URL}${url} response ${resp.status}`, "API");
+      return resp;
+    })
+    .then(response => response.json())
+    .catch(err => Log.error(`Error ${err}`, err, "API"));
+  // .catch(err => console.error(`API Exception ${JSON.stringify(err)}`, err))
+};
 
-/**
- * Submitting a PATCH request
- * @param {*} url
- * @param {*} body
- */
-export function api_patch(url, body) {
-  console.log(
-    `Starting PATCH request to ${API}${url} with body ${JSON.stringify(body)}`
-  );
-
-  return fetch(`${API}${url}`, {
-    headers: HEADERS,
-    method: "PATCH",
-    body: JSON.stringify(body)
-  }).then(logResponse(url, "PATCH"));
-}
-
-export function api_put(url, body) {
-  console.log(
-    `Starting PUT request to ${API}${url} with body ${JSON.stringify(body)}`
-  );
-
-  return fetch(`${API}${url}`, {
-    headers: HEADERS,
-    method: "PUT",
-    body: JSON.stringify(body)
-  }).then(logResponse(url, "PUT"));
-}
-
-export function api_delete(url, body) {
-  console.log(
-    `Starting DELETE request to ${API}${url} with body ${JSON.stringify(body)}`
-  );
-
-  return fetch(`${API}${url}`, {
-    headers: HEADERS,
-    method: "DELETE",
-    body: JSON.stringify(body)
-  }).then(logResponse(url, "DELETE"));
-}
-
-// -----------------------------------------------------------------------------
-
-/**
- * Logging incoming response
- * @param {*} url requested URL
- * @param {*} method request method
- * @param {*} response request response
- */
-function logResponse(url, method) {
-  return response => {
-    console.log(`Receive ${method} response from ${url}:`);
-    console.log(response);
-    return response;
-  };
-}
+const API = {
+  get: url => call_api("GET", url),
+  post: (url, body) => call_api("POST", url, body),
+  patch: (url, body) => call_api("PATCH", url, body),
+  put: (url, body) => call_api("PUT", url, body),
+  delete: (url, body) => call_api("DELETE", url, body)
+};
+export default API;
