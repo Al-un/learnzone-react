@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "c158e889a46bd39a6be1",
+    "revision": "8bdede596f50af3fd5ff",
     "url": "/learnzone-react/static/css/main.9b394da4.chunk.css"
   },
   {
-    "revision": "c158e889a46bd39a6be1",
-    "url": "/learnzone-react/static/js/main.c158e889.chunk.js"
+    "revision": "8bdede596f50af3fd5ff",
+    "url": "/learnzone-react/static/js/main.8bdede59.chunk.js"
   },
   {
     "revision": "e22764cccf83d3d65a25",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/learnzone-react/static/js/runtime~main.aa1cc95c.js"
   },
   {
-    "revision": "5dc6bfb299b216aa56a64281fa93abf3",
+    "revision": "c5e69e529bc5aa743f6ea7055b2a75a0",
     "url": "/learnzone-react/index.html"
   }
 ];
