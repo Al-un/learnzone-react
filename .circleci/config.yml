@@ -67,6 +67,7 @@ jobs:
             - circleci_scripts
   # ---------- Testing job
   test:
+    working_directory: ~/repo/
     docker:
       # https://hub.docker.com/r/circleci/node/
       - image: circleci/node:11-browsers-legacy
@@ -98,6 +99,7 @@ jobs:
             fi
   # ---------- Deployment job
   deploy:
+    working_directory: ~/
     docker:
       - image: buildpack-deps:trusty
     steps:
