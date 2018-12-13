@@ -1,5 +1,6 @@
 {
   "name": "learnzone-react",
+  "homepage": "https://al-un.github.io/learnzone-react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,8 +17,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "react-scripts-test": "react-scripts test",
+    "test": "jest",
+    "eject": "react-scripts eject",
+    "deploy-gh-pages": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -27,5 +30,32 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "gh-pages": "^2.0.1",
+    "react-test-renderer": "^16.6.3"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>/src/setupTests.js",
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "collectCoverage": true,
+    "coverageReporters": [
+      "lcov"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ]
+  }
 }

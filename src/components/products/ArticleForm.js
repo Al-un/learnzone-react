@@ -1,5 +1,5 @@
 import React from "react";
-import IdHiddenInput from "../utils/IdHiddenInput";
+import { IdHiddenInput } from "../utils/Inputs";
 import PropTypes from "prop-types";
 import { ARTICLE_ATTRIBUTES } from "./Article";
 
@@ -28,7 +28,7 @@ class ArticleForm extends React.Component {
     });
     // Log.debug(`updating entity ${JSON.stringify(this.state)}`);
   };
-  
+
   handleFormSubmit = event => {
     event.preventDefault();
     this.props.saveEntity(this.state.entity);

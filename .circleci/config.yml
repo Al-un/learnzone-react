@@ -4,18 +4,38 @@
 # Using CircleCI 2
 version: 2
 
-jobs: 
+# Workflow
+workflows:
+  version: 2
+  full-flow:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+
+# Jobs
+jobs:
+  # ---------- Building job
   build:
-    docker: 
+    working_directory: ~/repo/
+    docker:
       # https://hub.docker.com/r/circleci/node/
       - image: circleci/node:11-browsers-legacy
-    steps: 
+    steps:
       - checkout
 
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
-          - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
+            - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
 
       - run:
           name: Install Dependencies
@@ -26,4 +46,80 @@ jobs:
           name: Save Yarn Package Cache
           key: learnzone-react-dependencies-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
+            - ~/repo/node_modules
+            
+      - run:
+          name: Build production site
+          command: yarn build
+      # Save script for deployment
+      - run:
+          name: Saving deployment scripts
+          command: |
+            mkdir circleci_scripts
+            cp ~/repo/.circleci/deploy-ghpages.sh circleci_scripts/deploy-ghpages.sh
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory.
+          # This is a directory on the container which is  taken to be the root
+          # directory of the workspace.
+          root: ./
+          paths:
+            - build
+            - circleci_scripts
+  # ---------- Testing job
+  test:
+    working_directory: ~/repo/
+    docker:
+      # https://hub.docker.com/r/circleci/node/
+      - image: circleci/node:11-browsers-legacy
+    steps:
+      - checkout
+      # Cache should not have changed as "build" ran before. Just get it back
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
+      # Code Climate setup & initialise
+      - run:
+          name: Code Climate test-reporter setup
+          command: |
+            # download test reporter as a static binary
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter before-build
+      # Testing configuration must be configured in package.json
+      - run:
+          name: Testing
+          command: yarn test
+      # Code Climate sending report
+      - run:
+          name: Code Climate report
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $?
+            fi
+  # ---------- Deployment job
+  deploy:
+    working_directory: ~/
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      # ---- to deploy on Heroku
+      # - checkout
+      # - run:
+      #     name: Deploy to Heroku
+      #     command: |
+      #       git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP.git feature/circleci:master --force
+      # ---- to deploy on GutHub pages
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ~/repo/
+      # Ensure content is property copied
+      - run: ls ~/repo/build
+      - run: ls ~/repo/circleci_scripts
+      # Deploy
+      # https://github.com/Villanuevand/deployment-circleci-gh-pages
+      - run:
+          name: Deploying Github page
+          command: |
+            chmod +x ~/repo/circleci_scripts/deploy-ghpages.sh
+            ~/repo/circleci_scripts/deploy-ghpages.sh  ~/repo/build
