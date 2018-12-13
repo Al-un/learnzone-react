@@ -1,7 +1,7 @@
 //React
 import React, { Component } from "react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 // Styles
 import "./stylesheets/application.scss";
 // Services
@@ -18,9 +18,9 @@ class App extends Component {
 
     return (
       <Provider store={store}>
-        <BrowserRouter history={history} basename={basename}>
+        <Router history={history} basename={basename}>
           <Layout auth={auth} />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
   }
