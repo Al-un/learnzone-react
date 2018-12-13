@@ -77,3 +77,13 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $?
             fi
+  # ---------- Deployment job
+  deploy:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: Deploy to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP.git feature/circleci:master --force
