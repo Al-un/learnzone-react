@@ -25,6 +25,7 @@ workflows:
 jobs:
   # ---------- Building job
   build:
+    working_directory: ~/repo/
     docker:
       # https://hub.docker.com/r/circleci/node/
       - image: circleci/node:11-browsers-legacy
@@ -45,7 +46,25 @@ jobs:
           name: Save Yarn Package Cache
           key: learnzone-react-dependencies-{{ checksum "yarn.lock" }}
           paths:
-            - ./node_modules
+            - ~/repo/node_modules
+            
+      - run:
+          name: Build production site
+          command: yarn build
+      # Save script for deployment
+      - run:
+          name: Saving deployment scripts
+          command: |
+            mkdir circleci_scripts
+            cp ~/repo/.circleci/deploy-ghpages.sh circleci_scripts/deploy-ghpages.sh
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory.
+          # This is a directory on the container which is  taken to be the root
+          # directory of the workspace.
+          root: ./
+          paths:
+            - build
+            - circleci_scripts
   # ---------- Testing job
   test:
     docker:
@@ -82,8 +101,23 @@ jobs:
     docker:
       - image: buildpack-deps:trusty
     steps:
-      - checkout
+      # ---- to deploy on Heroku
+      # - checkout
+      # - run:
+      #     name: Deploy to Heroku
+      #     command: |
+      #       git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP.git feature/circleci:master --force
+      # ---- to deploy on GutHub pages
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ~/repo/
+      # Ensure content is property copied
+      - run: ls ~/repo/build
+      - run: ls ~/repo/circleci_scripts
+      # Deploy
+      # https://github.com/Villanuevand/deployment-circleci-gh-pages
       - run:
-          name: Deploy to Heroku
+          name: Deploying Github page
           command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP.git feature/circleci:master --force
+            chmod +x ~/repo/circleci_scripts/deploy-ghpages.sh
+            ~/repo/circleci_scripts/deploy-ghpages.sh  ~/repo/build

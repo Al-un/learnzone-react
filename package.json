@@ -1,5 +1,6 @@
 {
   "name": "learnzone-react",
+  "homepage": "https://al-un.github.io/learnzone-react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
