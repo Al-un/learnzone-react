@@ -11,23 +11,23 @@ workflows:
     jobs:
       - build
       - test:
-          requires: 
+          requires:
             - build
 
 # Jobs
-jobs: 
+jobs:
   # ---------- Building job
   build:
-    docker: 
+    docker:
       # https://hub.docker.com/r/circleci/node/
       - image: circleci/node:11-browsers-legacy
-    steps: 
+    steps:
       - checkout
 
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
-          - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
+            - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
 
       - run:
           name: Install Dependencies
@@ -40,18 +40,31 @@ jobs:
           paths:
             - ./node_modules
   # ---------- Testing job
-  test: 
-    docker: 
+  test:
+    docker:
       # https://hub.docker.com/r/circleci/node/
       - image: circleci/node:11-browsers-legacy
-    steps: 
+    steps:
       - checkout
       # Cache should not have changed as "build" ran before. Just get it back
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
-          - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
+            - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
+      # Code Climate setup & initialise
+      - run:
+          name: Code Climate test-reporter setup
+          command: |
+            # download test reporter as a static binary
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter before-build
       # Testing configuration must be configured in package.json
       - run:
           name: Testing
           command: npm test
+      # Code Climate sending report
+      - run:
+          name: Code Climate report
+          command: 
+            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
