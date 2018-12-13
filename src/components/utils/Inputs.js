@@ -9,4 +9,4 @@ IdHiddenInput.propsType = {
   id: PropTypes.number
 };
 
-export default IdHiddenInput;
+export { IdHiddenInput };

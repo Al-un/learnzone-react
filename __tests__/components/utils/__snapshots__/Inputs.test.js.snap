@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ID Hidden input With an entity.id renders the hidden input 1`] = `
+<input
+  name="id"
+  type="hidden"
+  value="4"
+/>
+`;
+
+exports[`ID Hidden input Without an entity.id renders an empty string 1`] = `""`;

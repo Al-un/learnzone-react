@@ -1,5 +1,5 @@
 import React from "react";
-import IdHiddenInput from "../utils/IdHiddenInput";
+import { IdHiddenInput } from "../utils/Inputs";
 import PropTypes from "prop-types";
 import { CATALOG_ATTRIBUTES } from "./Catalog";
 
@@ -32,7 +32,7 @@ class CatalogForm extends React.Component {
   handleFormSubmit = event => {
     event.preventDefault();
     this.props.saveEntity(this.state.entity);
-  }
+  };
 
   render() {
     return (
