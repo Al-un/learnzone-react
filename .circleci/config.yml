@@ -39,6 +39,7 @@ jobs:
           key: learnzone-react-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
+      - run: ls
   # ---------- Testing job
   test: 
     docker: 
@@ -46,6 +47,12 @@ jobs:
       - image: circleci/node:11-browsers-legacy
     steps: 
       - checkout
+      - run: ls
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+          - learnzone-react-dependencies-{{ checksum "yarn.lock" }}
+      - run: ls
       - run:
           name: Testing
           command: npm test
