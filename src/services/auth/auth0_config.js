@@ -13,7 +13,7 @@ export const AUTH0_CONFIG =
       }
     : {
         domain: "al-un.eu.auth0.com",
-        clientID: "",
+        clientID: "0nwDEdqBp76l2tr19nGI48AxOuF0VdCP",
         redirectUri: `${base_url}/callback`,
         logoutUrl: `${base_url}/`,
         audience: "https://rails.learnzone.com"
