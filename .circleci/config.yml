@@ -4,7 +4,19 @@
 # Using CircleCI 2
 version: 2
 
+# Workflow
+workflows:
+  version: 2
+  full-flow:
+    jobs:
+      - build
+      - test:
+          requires: 
+            - build
+
+# Jobs
 jobs: 
+  # ---------- Building job
   build:
     docker: 
       # https://hub.docker.com/r/circleci/node/
@@ -27,3 +39,13 @@ jobs:
           key: learnzone-react-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
+  # ---------- Testing job
+  test: 
+    docker: 
+      # https://hub.docker.com/r/circleci/node/
+      - image: circleci/node:11-browsers-legacy
+    steps: 
+      - checkout
+      - run:
+          name: Testing
+          command: npm test
